@@ -72,7 +72,7 @@ const codeBlocks = [
 
 
 app.use(cors({
-      origin: 'https://codeblocks-xcfp.vercel.app',
+      origin: '*',
     }));
 app.use(express.static('public'));
 
