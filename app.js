@@ -71,7 +71,9 @@ const codeBlocks = [
     addCodeBlocks();
 
 
-app.use(cors());
+app.use(cors({
+      origin: 'https://codeblocks-xcfp-7rn6d9nm9-noys-projects-74425ffe.vercel.app',
+    }));
 app.use(express.static('public'));
 
 app.get('/get-code-block-titles', async (req, res) => {
