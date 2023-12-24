@@ -72,7 +72,7 @@ const codeBlocks = [
 
 
 app.use(cors({
-      origin: 'https://codeblocks-xcfp-7rn6d9nm9-noys-projects-74425ffe.vercel.app',
+      origin: 'https://codeblocks-xcfp.vercel.app',
     }));
 app.use(express.static('public'));
 
@@ -88,6 +88,7 @@ app.get('/get-code-block-titles', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
   
+
 });
 
 app.get('/get-code-block-details', async (req, res) => {
