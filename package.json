@@ -2,11 +2,9 @@
   "name": "codeblocks",
   "main": "/api/index.js",
   "version": "1.0.0",
-  "engines": {
-    "node": "14.x"
-  },
+  
   "scripts": {
-    "start": "node /api/index.js",
+    
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
