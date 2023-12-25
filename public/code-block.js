@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function ()
     const codeBlockTitle = urlParams.get('title');
 
 
-    const socket = io();
+    const socket = io(window.location.origin);
     socket.on('connect', () => {
     console.log('Connected to Socket.io');
     });

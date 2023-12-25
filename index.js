@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = socketIO(server);
 const MONGODB_URI = process.env.MONGODB_URI ||'mongodb+srv://admin:f0fARecactXZxc9t@cluster0.yzvertb.mongodb.net/CODEBLOCK';
-const socket = io(window.location.origin);
+
 
 
 
