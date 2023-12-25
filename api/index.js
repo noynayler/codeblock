@@ -72,7 +72,9 @@ const codeBlocks = [
 
 
 // app.use(express.json());
-
+app.use(cors({
+  origin: '*',
+}));
 app.use(express.static('public'));
 
 app.get('/get-code-block-titles', async (req, res) => {
