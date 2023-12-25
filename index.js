@@ -12,7 +12,7 @@ const MONGODB_URI = process.env.MONGODB_URI ||'mongodb+srv://admin:f0fARecactXZx
 const socket = io(window.location.origin);
 
 
-app.use(cors());
+
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -31,8 +31,9 @@ process.on('SIGINT', () => {
 
 
 const corsOptions = {
-      origin: 'https://codeblocks-xcfp.vercel.app',
-    };
+  origin: ['http://localhost:3000', 'https://codeblocks-xcfp.vercel.app'],
+};
+
     
 app.use(cors(corsOptions));
 app.use(express.static(__dirname + '/public'));
