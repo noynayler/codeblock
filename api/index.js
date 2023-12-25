@@ -71,10 +71,9 @@ const codeBlocks = [
     addCodeBlocks();
 
 
-// app.use(express.json());
 app.use(cors({
-  origin: '*',
-}));
+      origin: '*',
+    }));
 app.use(express.static('public'));
 
 app.get('/get-code-block-titles', async (req, res) => {
@@ -135,12 +134,12 @@ app.get('/get-mentor-status', (req, res) => {
 
 // Render code block page
 app.get('/code-block', (req, res) => {
-  res.sendFile(__dirname + './public/code-block.html');
+  res.sendFile(__dirname + '/public/code-block.html');
 });
 
 // Render lobby page
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + './public/index.html');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 server.listen(PORT, () => {
