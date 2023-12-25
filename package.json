@@ -1,6 +1,6 @@
 {
   "name": "codeblocks",
-  "main": "/api/index.js",
+  "main": "api/index.js",
   "version": "1.0.0",
   
   "scripts": {
