@@ -1,4 +1,6 @@
 const express = require('express');
+const serverless=require('serverless-http');
+const router= express.Router();
 const http = require('http');
 const socketIO = require('socket.io');
 const mongoose = require('mongoose');
@@ -12,7 +14,7 @@ const MONGODB_URI = process.env.MONGODB_URI ||'mongodb+srv://admin:f0fARecactXZx
 
 
 
-
+module.exports.handler=serverless;
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -31,7 +33,7 @@ process.on('SIGINT', () => {
 
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://codeblocks-xcfp.vercel.app'],
+  origin: ['http://localhost:3000', URL],
 };
 
     
