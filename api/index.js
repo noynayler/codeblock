@@ -3,7 +3,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const CodeBlock = require('./models/CodeBlocks');
+const CodeBlock = require('../models/CodeBlocks');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
@@ -133,12 +133,12 @@ app.get('/get-mentor-status', (req, res) => {
 
 // Render code block page
 app.get('/code-block', (req, res) => {
-  res.sendFile(__dirname + '/public/code-block.html');
+  res.sendFile(__dirname + './public/code-block.html');
 });
 
 // Render lobby page
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + './public/index.html');
 });
 
 server.listen(PORT, () => {
