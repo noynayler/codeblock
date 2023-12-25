@@ -70,10 +70,12 @@ const codeBlocks = [
     
     addCodeBlocks();
 
-
-app.use(express.json());
-
-app.use(express.static('public'));
+const corsOptions = {
+      origin: 'https://codeblocks-xcfp.vercel.app',
+    };
+    
+app.use(cors(corsOptions));
+app.use(express.static(__dirname + '/public'));
 
 app.get('/get-code-block-titles', async (req, res) => {
   try {
