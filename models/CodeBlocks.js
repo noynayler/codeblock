@@ -5,6 +5,8 @@ const codeBlockSchema = new mongoose.Schema({
   code: String,
   question:String,
   solution:String,
+  isMentor:Boolean,
+  connections:Number,
 });
 
 module.exports = mongoose.model('CodeBlock', codeBlockSchema);

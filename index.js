@@ -10,8 +10,9 @@ const server = http.createServer(app);
 const io = socketIO(server);
 const MONGODB_URI = process.env.MONGODB_URI ||'mongodb+srv://admin:f0fARecactXZxc9t@cluster0.yzvertb.mongodb.net/CODEBLOCK';
 
-let isFirstConnection=true;
 
+
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -28,47 +29,6 @@ process.on('SIGINT', () => {
 });
 
 
-const codeBlocks = [
-  {
-            title: 'Log a Message to the Console',
-            code: '',
-            question:'Uses console.log() to print the string "Hello, World!" to the console.',
-            solution: 'console.log("Hello, World!");',
-          },
-          {
-            title: 'Ternary Operator for a Simple Condition',
-            code: '',
-            question:'Assigns a message to result based on the value of the isTrue variable using the ternary operator.',
-            solution: 'let result = isTrue ? "true!" : "false!";',
-          },
-          {
-            title: 'Array Manipulation ',
-            code: '',
-            question:'Adds the number 4 to the end of the numbers array using push method.<br>let numbers = [1, 2, 3];',
-            solution: 'numbers.push(4);',
-          },
-          {
-            title: 'Anonymous Arrow Function',
-            code: '',
-            question:'Defines a function square that takes a parameter x and returns its square using the arrow function syntax.',
-            solution: 'let square = x => x * x;',
-          },
-    ];
-
-    async function addCodeBlocks() {
-      try {
-        // Clear existing code blocks
-        await CodeBlock.deleteMany({});
-        // Add new code blocks
-        const addedCodeBlocks = await CodeBlock.create(codeBlocks);
-        console.log('Code blocks added successfully:', addedCodeBlocks);
-      } catch (error) {
-        console.error('Error adding code blocks:', error);
-      } 
-      }
-    
-    
-    addCodeBlocks();
 
 const corsOptions = {
       origin: 'https://codeblocks-xcfp.vercel.app',
@@ -76,7 +36,7 @@ const corsOptions = {
     
 app.use(cors(corsOptions));
 app.use(express.static(__dirname + '/public'));
-
+app.use(express.json());
 app.get('/get-code-block-titles', async (req, res) => {
   try {
     // Fetch code block titles from MongoDB
@@ -89,24 +49,18 @@ app.get('/get-code-block-titles', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
   
-
 });
 
+
+//return the codeblock details 
 app.get('/get-code-block-details', async (req, res) => {
   try {
     
     const title = req.query.title;
     const codeBlock = await CodeBlock.findOne({ title });
-
-    // Check if the mentor is not already set
-    if (!codeBlock.mentor) {
-      // Assign the mentor role to the first connection
-      codeBlock.mentor = true;
-      // Save the updated code block to MongoDB
-      await codeBlock.save();
-    }
-
     res.json(codeBlock);
+
+
   } catch (error) {
     console.error('Error fetching code block details:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -114,22 +68,83 @@ app.get('/get-code-block-details', async (req, res) => {
   
 });
 
-// Handle socket connections
-io.on('connection', (socket) => {
-  if (isFirstConnection) {
-    // The first connected session is the mentor, set it as read-only
-    socket.emit('role', 'mentor');
-    isFirstConnection = false;
-  } else {
-    // Additional sessions are students
-    socket.emit('role', 'student');
+// // after the mentor connected the value changed to false
+// app.post('/update-is-mentor', async (req, res) => {
+//   try {
+//     const { title } = req.body;
+
+//     const codeBlock = await CodeBlock.findOne({ title });
+
+//     if (!codeBlock) {
+//       return res.status(404).json({ success: false, message: 'Document not found' });
+//     }
+
+//     codeBlock.isMentor = false;
+
+//     await codeBlock.save();
+
+//     res.json({ success: true, message: 'isMentor updated successfully' });
+//   } catch (error) {
+//     console.error('Error updating isMentor:', error);
+//     res.status(500).json({ success: false, message: 'Error updating isMentor', error: error.message });
+//   }
+// });
+
+// count the clicks on codeblock
+app.post('/increment-connections', async (req, res) => {
+  try {
+    const { codeBlockId } = req.query;
+
+    const result = await CodeBlock.updateOne(
+      { _id: codeBlockId },
+      { $inc: { connections: 1 } }
+    );
+
+    console.log('Increment Connections Result:', result);
+
+    if (result.nModified === 0) {
+      return res.status(404).json({ success: false, message: 'Document not found or already updated' });
+    }
+
+    res.json({ success: true, message: 'Connections incremented successfully', result });
+  } catch (error) {
+    console.error('Error incrementing connections:', error);
+    res.status(500).json({ success: false, message: 'Error incrementing connections', error: error.message });
   }
-
-
 });
 
-app.get('/get-mentor-status', (req, res) => {
-  res.json({ isFirstConnection });
+app.post('/decrement-connections', async (req, res) => {
+  try {
+    const { codeBlockId } = req.query;
+
+    const result = await CodeBlock.updateOne(
+      { _id: codeBlockId },
+      { $inc: { connections: -1 } }
+    );
+
+    if (result.nModified === 0) {
+      return res.status(404).json({ success: false, message: 'Document not found or connections not updated' });
+    }
+
+    res.json({ success: true, message: 'Connections decremented successfully', result });
+  } catch (error) {
+    console.error('Error decrementing connections:', error);
+    res.status(500).json({ success: false, message: 'Error decrementing connections', error: error.message });
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('User connected');
+
+  // Listen for code changes from clients
+  socket.on('code-change', (data) => {
+      // Broadcast the code change to all connected sockets
+      io.emit('code-change', data);
+  });
+
+  socket.on('disconnect', () => {
+      console.log('User disconnected');
+  });
 });
 
 
