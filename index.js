@@ -3,7 +3,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const CodeBlock = require('../models/CodeBlocks');
+const CodeBlock = require('./models/CodeBlocks');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
@@ -71,9 +71,8 @@ const codeBlocks = [
     addCodeBlocks();
 
 
-app.use(cors({
-      origin: '*',
-    }));
+app.use(express.json());
+
 app.use(express.static('public'));
 
 app.get('/get-code-block-titles', async (req, res) => {
