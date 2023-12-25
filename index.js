@@ -71,29 +71,8 @@ app.get('/get-code-block-details', async (req, res) => {
   
 });
 
-// // after the mentor connected the value changed to false
-// app.post('/update-is-mentor', async (req, res) => {
-//   try {
-//     const { title } = req.body;
 
-//     const codeBlock = await CodeBlock.findOne({ title });
-
-//     if (!codeBlock) {
-//       return res.status(404).json({ success: false, message: 'Document not found' });
-//     }
-
-//     codeBlock.isMentor = false;
-
-//     await codeBlock.save();
-
-//     res.json({ success: true, message: 'isMentor updated successfully' });
-//   } catch (error) {
-//     console.error('Error updating isMentor:', error);
-//     res.status(500).json({ success: false, message: 'Error updating isMentor', error: error.message });
-//   }
-// });
-
-// count the clicks on codeblock
+// count the connections to codeblock
 app.post('/increment-connections', async (req, res) => {
   try {
     const { codeBlockId } = req.query;

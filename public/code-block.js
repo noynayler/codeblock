@@ -99,14 +99,31 @@ document.addEventListener('DOMContentLoaded', function ()
       fetch(`/increment-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {
         method: 'POST',
       });
+
+        // Keep a reference to the fetch promise
+      let decrementConnectionsPromise;
+
+      // Function to decrement connections
+      const decrementConnections = async () => {
+      if (!decrementConnectionsPromise) {
+        decrementConnectionsPromise = fetch(`/decrement-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {
+        method: 'POST',
+      });
+    }
+    return decrementConnectionsPromise;
+    };
+
+  // Handle the beforeunload event
+  window.addEventListener('beforeunload', async (event) => {
+    try {
+      await decrementConnections();
+    } catch (error) {
+      console.error('Error decrementing connections:', error);
+    }
+  });
  
      
-      // Decrease connections when leaving the code block
-      window.addEventListener('beforeunload', async () => {
-        await fetch(`/decrement-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {
-          method: 'POST',
-        });
-      });
+      
     })
     .catch(error => console.error('Error fetching code block details:', error));
    
