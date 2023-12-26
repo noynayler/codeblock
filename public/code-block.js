@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function ()
         editor.on('change', function () {
           const code = editor.getValue();
           socket.emit('code-change', { title: codeBlock.title, code });
-        });
+        
 
       // Check if the code is identical to the solution in the provided code block
             if (code === codeBlock.solution) {
@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', function ()
               // Display an error message 
               resultMessageDiv.innerText = 'Oops! Try again.';
             }
+
+          });
 
       }
       else{
@@ -87,8 +89,6 @@ document.addEventListener('DOMContentLoaded', function ()
 
       }
       
-
-
 
       fetch(`/increment-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {
         method: 'POST',
@@ -115,11 +115,8 @@ document.addEventListener('DOMContentLoaded', function ()
       console.error('Error decrementing connections:', error);
     }
 
- 
-
   });
  
-     
       
     })
     .catch(error => console.error('Error fetching code block details:', error));
