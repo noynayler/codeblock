@@ -1,4 +1,5 @@
 const smileyImagePath = 'smiley.png';
+let previousCode='';
 document.addEventListener('DOMContentLoaded', function () 
 {
     const codeBlockTitleDiv = document.getElementById('codeblockTitle');
@@ -50,41 +51,57 @@ document.addEventListener('DOMContentLoaded', function ()
         readOnly:isMentor ,
       });
 
+        // Listen for code changes from the server
+    socket.on('code-change', (data) => {
+      if (data.code !== editor.getValue()) {
+        editor.setValue(data.code);
+      }
+    });
 
-      socket.on('code-change', (data) => {
-        const newCode = data.code;
+    
+
+    editor.on('change', () => {
+      const code = editor.getValue();
+      if (code !== previousCode) {
+        socket.emit('code-change', { title: 'unique-title', code });
+        previousCode = code; // Update the previousCode variable
+      }
+    });
+
+      // socket.on('code-change', (data) => {
+      //   const newCode = data.code;
       
-        // Save the current cursor and scroll positions
-        const cursor = editor.getCursor();
-        const scrollInfo = editor.getScrollInfo();
+      //   // Save the current cursor and scroll positions
+      //   const cursor = editor.getCursor();
+      //   const scrollInfo = editor.getScrollInfo();
       
-        // Set the received code in the CodeMirror editor
-        editor.setValue(newCode);
+      //   // Set the received code in the CodeMirror editor
+      //   editor.setValue(newCode);
       
-        // Restore the cursor and scroll positions
-        editor.setCursor(cursor);
-        editor.scrollTo(scrollInfo.left, scrollInfo.top);
-      });
+      //   // Restore the cursor and scroll positions
+      //   editor.setCursor(cursor);
+      //   editor.scrollTo(scrollInfo.left, scrollInfo.top);
+      // });
  
 
 
-      // compare with result while student typing
+      // // compare with result while student typing
 
-      if (!isMentor) {
-        editor.on('change', debounce(function () {
-          const code = editor.getValue();
-          // Check if the code is identical to the solution in the provided code block
-          if (code === codeBlock.solution) {
-            // Display a success message
-            resultMessageDiv.innerHTML = '<br><img src="' + smileyImagePath + '" id="smileyImage">';
-          } else {
-            // Display an error message 
-            resultMessageDiv.innerText = 'Oops! Try again.';
-          }
-          // Emit code changes to the server
-          socket.emit('code-change', { title: codeBlock.title, code });
-        }, 100)); // Adjust the debounce delay as needed
-      }
+      // if (!isMentor) {
+      //   editor.on('change', debounce(function () {
+      //     const code = editor.getValue();
+      //     // Check if the code is identical to the solution in the provided code block
+      //     if (code === codeBlock.solution) {
+      //       // Display a success message
+      //       resultMessageDiv.innerHTML = '<br><img src="' + smileyImagePath + '" id="smileyImage">';
+      //     } else {
+      //       // Display an error message 
+      //       resultMessageDiv.innerText = 'Oops! Try again.';
+      //     }
+      //     // Emit code changes to the server
+      //     socket.emit('code-change', {  title: codeBlock.title, code });
+      //   }, 100)); // Adjust the debounce delay as needed
+      // }
 
       fetch(`/increment-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {
         method: 'POST',
