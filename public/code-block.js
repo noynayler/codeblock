@@ -67,15 +67,13 @@ document.addEventListener('DOMContentLoaded', function ()
           editor.scrollTo(scrollInfo.left, scrollInfo.top);
         });
     
-
+        if (!isMentor){
         editor.on('change', debounce(() => {
           const code = editor.getValue();
           if (code !== previousCode) {
             socket.emit('code-change', { title: codeBlock.title, code });
             previousCode = code; // Update the previousCode variable
           }
-        
-          if (!isMentor){
             // Check if the code is identical to the solution in the provided code block
             if (code === codeBlock.solution) {
               // Display a success message
@@ -84,8 +82,9 @@ document.addEventListener('DOMContentLoaded', function ()
               // Display an error message 
               resultMessageDiv.innerText = 'Oops! Try again.';
             }
-          }
-        }, 300));
+          
+        }, 100));
+      }
 
 
 
@@ -113,6 +112,18 @@ document.addEventListener('DOMContentLoaded', function ()
     } catch (error) {
       console.error('Error decrementing connections:', error);
     }
+
+    if(isMentor){
+    // Get all connected sockets
+      const connectedSockets = io.sockets.sockets;
+
+    // Iterate over connected sockets and disconnect each one
+      for (const socketId in connectedSockets) {
+      const socket = connectedSockets[socketId];
+      socket.disconnect(true); // true means 'close' the connection
+}
+    }
+
   });
  
      
