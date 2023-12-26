@@ -52,6 +52,24 @@ document.addEventListener('DOMContentLoaded', function ()
       });
 
         // Listen for code changes from the server
+
+      if (!isMentor) {
+        editor.on('change', function () {
+          const code = editor.getValue();
+          socket.emit('code-change', { title: codeBlock.title, code });
+        });
+
+      // Check if the code is identical to the solution in the provided code block
+            if (code === codeBlock.solution) {
+              // Display a success message
+              resultMessageDiv.innerHTML = '<br><img src="' + smileyImagePath + '" id="smileyImage">';
+            } else {
+              // Display an error message 
+              resultMessageDiv.innerText = 'Oops! Try again.';
+            }
+
+      }
+      else{
         socket.on('code-change', (data) => {
           const newCode = data.code;
         
@@ -66,25 +84,9 @@ document.addEventListener('DOMContentLoaded', function ()
           editor.setCursor(cursor);
           editor.scrollTo(scrollInfo.left, scrollInfo.top);
         });
-    
-        if (!isMentor){
-        editor.on('change', debounce(() => {
-          const code = editor.getValue();
-          if (code !== previousCode) {
-            socket.emit('code-change', { title: codeBlock.title, code });
-            previousCode = code; // Update the previousCode variable
-          }
-            // Check if the code is identical to the solution in the provided code block
-            if (code === codeBlock.solution) {
-              // Display a success message
-              resultMessageDiv.innerHTML = '<br><img src="' + smileyImagePath + '" id="smileyImage">';
-            } else {
-              // Display an error message 
-              resultMessageDiv.innerText = 'Oops! Try again.';
-            }
-          
-        }, 100));
+
       }
+      
 
 
 
