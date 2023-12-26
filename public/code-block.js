@@ -52,10 +52,7 @@ document.addEventListener('DOMContentLoaded', function ()
         readOnly:isMentor ,
       });
 
-      editor.on('change', () => {
-        const code = editor.getValue();
-        socket.emit('code-change', { title: codeBlock.title, code });
-      });
+
 
     socket.on('code-change', (data) => {
       // Update the CodeMirror editor with the received code
@@ -67,25 +64,24 @@ document.addEventListener('DOMContentLoaded', function ()
 
       // compare with result while student typing
 
-      if(!isMentor)
-      {
-        editor.on('keyup', function () 
-        {
-            // Retrieve the code from the editor
-            const code = editor.getValue();
-            // Check if the code is identical to the solution in the provided code block
-            if (code === codeBlock.solution) {
-              // Display a success message
-              resultMessageDiv.innerHTML = '<br><img src="' + smileyImagePath + '" id="smileyImage">';
-            } else {
-              // Display an error message 
-              resultMessageDiv.innerText = 'Oops! Try again.';
-            }
-            // // Emit code changes to the server
-            // socket.emit('code-change', { title: codeBlock.title, code });
-          });
+      if (!isMentor) {
+        editor.on('change', function () {
+          // Retrieve the code from the editor
+          const code = editor.getValue();
+          
+          // Check if the code is identical to the solution in the provided code block
+          if (code === codeBlock.solution) {
+            // Display a success message
+            resultMessageDiv.innerHTML = '<br><img src="' + smileyImagePath + '" id="smileyImage">';
+          } else {
+            // Display an error message 
+            resultMessageDiv.innerText = 'Oops! Try again.';
+          }
+          
+          // Emit code changes to the server
+          socket.emit('code-change', { title: codeBlock.title, code });
+        });
       }
-
 
       fetch(`/increment-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {
         method: 'POST',
