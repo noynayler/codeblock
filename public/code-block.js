@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function ()
             // Check if the code is identical to the solution in the provided code block
             if (code === codeBlock.solution) {
               // Display a success message
-              resultMessageDiv.innerHTML = 'Well Done!<br><br><img src="' + smileyImagePath + '" id="smileyImage" style="width: 50px; height: 50px;">';
+              resultMessageDiv.innerHTML = '<br><img src="' + smileyImagePath + '" id="smileyImage">';
             } else {
               // Display an error message 
               resultMessageDiv.innerText = 'Oops! Try again.';

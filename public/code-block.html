@@ -12,12 +12,25 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
 </head>
 <body>
-  <div id="codeblockTitle"></div>
-  <p><div id="codeblockQuestion"></div></p>
-  <div id="user"></div>
-  <div id="editor"></div>
- 
-  <div id="resultMessage"></div>
+  
+  <header>
+    <div id="logoContainer">
+      <div id="codeblocksLogo">Codeblocks</div>
+      <a href="index.html">
+        <div id="homepage"></div>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="code-block-container">
+      <div id="codeblockTitle"></div>
+      <p><div id="codeblockQuestion"></div></p>
+      <div id="user"></div>
+      <div id="editor"></div>
+      <div id="resultMessage"></div>
+    </section>
+  </main>
 
   <script src="code-block.js"></script>
 </body>
