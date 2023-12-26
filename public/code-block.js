@@ -1,6 +1,4 @@
 const smileyImagePath = 'smiley.png';
-
-const isMentor=true;
 document.addEventListener('DOMContentLoaded', function () 
 {
     const codeBlockTitleDiv = document.getElementById('codeblockTitle');
@@ -53,22 +51,28 @@ document.addEventListener('DOMContentLoaded', function ()
       });
 
 
-
-    socket.on('code-change', (data) => {
-      // Update the CodeMirror editor with the received code
-      if (data.code !== editor.getValue()) {
-          editor.setValue(data.code);
-      }
-  });
+      socket.on('code-change', (data) => {
+        const newCode = data.code;
+      
+        // Save the current cursor and scroll positions
+        const cursor = editor.getCursor();
+        const scrollInfo = editor.getScrollInfo();
+      
+        // Set the received code in the CodeMirror editor
+        editor.setValue(newCode);
+      
+        // Restore the cursor and scroll positions
+        editor.setCursor(cursor);
+        editor.scrollTo(scrollInfo.left, scrollInfo.top);
+      });
+ 
 
 
       // compare with result while student typing
 
       if (!isMentor) {
-        editor.on('change', function () {
-          // Retrieve the code from the editor
+        editor.on('change', debounce(function () {
           const code = editor.getValue();
-          
           // Check if the code is identical to the solution in the provided code block
           if (code === codeBlock.solution) {
             // Display a success message
@@ -77,10 +81,9 @@ document.addEventListener('DOMContentLoaded', function ()
             // Display an error message 
             resultMessageDiv.innerText = 'Oops! Try again.';
           }
-          
           // Emit code changes to the server
           socket.emit('code-change', { title: codeBlock.title, code });
-        });
+        }, 100)); // Adjust the debounce delay as needed
       }
 
       fetch(`/increment-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {

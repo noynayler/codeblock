@@ -10,9 +10,12 @@ const CodeBlock = require('./models/CodeBlocks');
 const app = express();
 const PORT = process.env.PORT;
 const server = http.createServer(app);
-const io = socketIO(server);
 const MONGODB_URI = process.env.MONGODB_URI ;
-
+const io = socketIO(server, {
+  cors: {
+    origin: ['http://localhost:3000', URL],
+  },
+});
 
 
 module.exports.handler=serverless;
