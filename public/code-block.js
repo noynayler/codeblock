@@ -52,7 +52,11 @@ document.addEventListener('DOMContentLoaded', function ()
         readOnly:isMentor ,
       });
 
-      
+      editor.on('change', () => {
+        const code = editor.getValue();
+        socket.emit('code-change', { code });
+      });
+
     socket.on('code-change', (data) => {
       // Update the CodeMirror editor with the received code
       if (data.code !== editor.getValue()) {

@@ -18,8 +18,8 @@ const codeBlocks = [
             {
               title: 'Ternary Operator for a Simple Condition',
               code: '',
-              question:'Assigns a message to result based on the value of the isTrue variable using the ternary operator.',
-              solution: 'let result = isTrue ? "true!" : "false!";',
+              question:'Uses the ternary operator to assign a message to the "result" variable based on the value of the "isTrue" variable.(let result = isTrue...)',
+              solution: 'let result = isTrue ? "true" : "false";',
               isMentor:true,
               connections:0,
             },
