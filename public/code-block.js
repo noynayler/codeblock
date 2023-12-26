@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function ()
       });
 
       
-      
     socket.on('code-change', (data) => {
       // Update the CodeMirror editor with the received code
       if (data.code !== editor.getValue()) {
@@ -61,15 +60,6 @@ document.addEventListener('DOMContentLoaded', function ()
       }
   });
 
-  if (!isMentor) {
-      editor.on('change', (instance, changeObj) => {
-          // Retrieve the code from the editor
-          const code = instance.getValue();
-
-          // Emit code changes to the server
-          socket.emit('code-change', { code });
-      });
-  }
 
       // compare with result while student typing
 
@@ -92,9 +82,6 @@ document.addEventListener('DOMContentLoaded', function ()
           });
       }
 
-  
-
-      
 
       fetch(`/increment-connections?codeBlockId=${encodeURIComponent(codeblock._id)}`, {
         method: 'POST',
