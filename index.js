@@ -125,15 +125,9 @@ io.on('connection', (socket) => {
 
   // Listen for code changes from clients
   socket.on('code-change', async (data) => {
-    try {
-      // Update or create a CodeBlock in MongoDB
-      await CodeBlock.findOneAndUpdate({ title: data.title }, { code: data.code }, { upsert: true });
       // Broadcast the code change to all connected sockets
       socket.broadcast.emit('code-change', data);
-    } catch (error) {
-      console.error('Error updating CodeBlock:', error);
-      // Handle the error as needed
-    }
+    
   });
 
   socket.on('disconnect', () => {

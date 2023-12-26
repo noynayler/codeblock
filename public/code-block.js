@@ -113,16 +113,7 @@ document.addEventListener('DOMContentLoaded', function ()
       console.error('Error decrementing connections:', error);
     }
 
-    if(isMentor){
-    // Get all connected sockets
-      const connectedSockets = io.sockets.sockets;
-
-    // Iterate over connected sockets and disconnect each one
-      for (const socketId in connectedSockets) {
-      const socket = connectedSockets[socketId];
-      socket.disconnect(true); // true means 'close' the connection
-}
-    }
+ 
 
   });
  
