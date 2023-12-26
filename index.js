@@ -129,7 +129,7 @@ io.on('connection', (socket) => {
       // Update or create a CodeBlock in MongoDB
       await CodeBlock.findOneAndUpdate({ title: data.title }, { code: data.code }, { upsert: true });
       // Broadcast the code change to all connected sockets
-      io.emit('code-change', data);
+      socket.broadcast.emit('code-change', data);
     } catch (error) {
       console.error('Error updating CodeBlock:', error);
       // Handle the error as needed
