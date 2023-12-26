@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function ()
 
       editor.on('change', () => {
         const code = editor.getValue();
-        socket.emit('code-change', { code });
+        socket.emit('code-change', { title: codeBlock.title, code });
       });
 
     socket.on('code-change', (data) => {
@@ -81,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function ()
               // Display an error message 
               resultMessageDiv.innerText = 'Oops! Try again.';
             }
-            // Emit code changes to the server
-            socket.emit('code-change', { title: codeBlock.title, code });
+            // // Emit code changes to the server
+            // socket.emit('code-change', { title: codeBlock.title, code });
           });
       }
 
