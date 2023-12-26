@@ -51,22 +51,34 @@ document.addEventListener('DOMContentLoaded', function ()
       });
 
 
-      socket.on('code-change', (data) => {
-        const newCode = data.code;
+      // socket.on('code-change', (data) => {
+      //   const newCode = data.code;
       
-        // Save the current cursor and scroll positions
-        const cursor = editor.getCursor();
-        const scrollInfo = editor.getScrollInfo();
+      //   // Save the current cursor and scroll positions
+      //   const cursor = editor.getCursor();
+      //   const scrollInfo = editor.getScrollInfo();
       
-        // Set the received code in the CodeMirror editor
-        editor.setValue(newCode);
+      //   // Set the received code in the CodeMirror editor
+      //   editor.setValue(newCode);
       
-        // Restore the cursor and scroll positions
-        editor.setCursor(cursor);
-        editor.scrollTo(scrollInfo.left, scrollInfo.top);
-      });
+      //   // Restore the cursor and scroll positions
+      //   editor.setCursor(cursor);
+      //   editor.scrollTo(scrollInfo.left, scrollInfo.top);
+      // });
  
+  // Listen for code changes from the server
+  socket.on('code-change', (data) => {
+    // Update the CodeMirror editor with the received code
+    if (data.code !== editor.getValue()) {
+      editor.setValue(data.code);
+    }
+  });
 
+  // Listen for local code changes
+  editor.on('change', function () {
+    // Emit code changes to the server
+    socket.emit('code-change', { code: editor.getValue() });
+  });
 
       // compare with result while student typing
 
@@ -82,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function ()
             resultMessageDiv.innerText = 'Oops! Try again.';
           }
           // Emit code changes to the server
-          socket.emit('code-change', { title: codeBlock.title, code });
+          // socket.emit('code-change', { title: codeBlock.title, code });
         }, 100)); // Adjust the debounce delay as needed
       }
 
